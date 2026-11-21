@@ -1,0 +1,648 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fractions et puissances</title>
+<style>
+:root{--ink:#1B2A41;--muted:#5A6B82;--line:#D5DEE8;--bg:#F6F8FB;--card:#fff;--blue:#2F5BD3;--blueL:#E3EBFB;--red:#D2452F;--redL:#FBE6E2;--green:#23945A;--greenL:#E4F4EA;--amber:#D9822B;--amberL:#FBEEDD}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;font-size:16px;line-height:1.5}
+header{background:var(--card);border-bottom:1px solid var(--line);padding:10px 16px;position:sticky;top:0;z-index:5}
+header .in{max-width:760px;margin:0 auto;display:flex;align-items:center;gap:10px}
+header h1{font-size:17px;margin:0;flex:1}
+.pts{font-size:14px;color:var(--muted);white-space:nowrap}
+main{max-width:760px;margin:0 auto;padding:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin:0 0 14px}
+h2{font-size:21px;margin:2px 0 6px}h3{font-size:16px;margin:0 0 8px}
+.lead{color:var(--muted);margin:0 0 8px}
+button{font:inherit;cursor:pointer;border-radius:10px;border:1.5px solid var(--line);background:#fff;color:var(--ink);padding:8px 14px}
+button:hover{border-color:var(--blue)}
+button.primary{background:var(--blue);border-color:var(--blue);color:#fff}
+button:disabled{opacity:.45;cursor:default}
+.m{font-family:"Cambria Math","STIX Two Math","Times New Roman",serif;font-size:21px}
+.fr{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;margin:0 3px;line-height:1.15}
+.fr>span:first-child{border-bottom:1.6px solid currentColor;padding:0 3px}
+.fr>span{padding:0 3px}
+.big{font-size:26px}
+.rule{background:var(--blueL);border-radius:10px;padding:10px 14px;margin:10px 0}
+.warn{background:var(--amberL);border-radius:10px;padding:10px 14px;margin:10px 0}
+.home{display:grid;gap:10px}
+.lvl{display:flex;align-items:center;gap:12px;text-align:left;padding:12px 14px;border-radius:14px;background:#fff;width:100%}
+.lvl .n{flex:none;width:34px;height:34px;border-radius:50%;background:var(--blueL);color:var(--blue);display:flex;align-items:center;justify-content:center;font-weight:700}
+.lvl .t{font-weight:600;display:block}.lvl .s{color:var(--muted);font-size:14px}
+.lvl .st{margin-left:auto;font-size:13px;color:var(--green);white-space:nowrap}
+.lvl.done .n{background:var(--greenL);color:var(--green)}
+.bar{height:8px;background:var(--line);border-radius:6px;overflow:hidden;margin:6px 0 12px}
+.bar>div{height:100%;background:var(--green);transition:width .4s}
+.ex{border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;margin:10px 0}
+.ex.ok{border-color:var(--green);background:#FAFEFB}
+.ex .q{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.ex .num{flex:none;width:26px;height:26px;border-radius:50%;background:var(--bg);color:var(--muted);font-size:13px;display:flex;align-items:center;justify-content:center}
+.ex.ok .num{background:var(--green);color:#fff}
+.ex input{font:inherit;font-size:19px;width:120px;padding:6px 10px;border:1.5px solid var(--line);border-radius:8px}
+.ex input:focus{outline:none;border-color:var(--blue)}
+.ex .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:8px}
+.ex .opts{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.ex .opts button{font-family:"Cambria Math","Times New Roman",serif;font-size:18px}
+.ex .opts button.ko{background:var(--redL);border-color:var(--red)}
+.ex .opts button.okb{background:var(--greenL);border-color:var(--green)}
+.fb{border-radius:9px;padding:8px 12px;margin-top:8px;display:none}
+.fb.show{display:block}.fb.ok{background:var(--greenL)}.fb.ko{background:var(--redL)}.fb.hint{background:var(--amberL)}
+.sol{display:none;background:var(--bg);border-left:4px solid var(--blue);border-radius:0 8px 8px 0;padding:8px 12px;margin-top:8px}
+.sol.show{display:block}
+.small{font-size:13px;color:var(--muted)}
+.tiles{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;margin:0 6px}
+.tiles .tr{display:flex;gap:6px}
+.tiles .ln{width:100%;height:2px;background:var(--ink);margin:4px 0}
+.tl{min-width:46px;height:44px;border-radius:9px;border:2px solid var(--blue);background:var(--blueL);color:var(--blue);font-family:"Cambria Math","Times New Roman",serif;font-size:21px;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0 6px;transition:all .3s;user-select:none}
+.tl.sel{background:var(--blue);color:#fff}
+.tl.one{border-color:var(--line);background:#fff}
+.tl.pop{transform:scale(1.18)}
+
+.cw{display:flex;flex-wrap:wrap;align-items:center;gap:14px;margin:8px 0}
+.side{font-family:"Cambria Math","Times New Roman",serif;font-size:21px;color:var(--green)}
+.tl s{color:#3E4C61;text-decoration:line-through 3px #D2452F;font-size:21px}
+.tl .rest{font-size:17px;color:var(--green);font-weight:700;margin-left:6px;position:relative;top:-10px}
+.tl:has(s){min-width:64px}
+.tl .pos{position:absolute;top:-9px;left:-7px;font-size:10px;font-family:system-ui,sans-serif;background:#fff;border:1px solid var(--line);border-radius:8px;padding:0 4px;color:var(--muted)}
+.tl{position:relative}
+.bigln{width:100%;height:3px;background:#D2452F;margin:6px 0}
+.log{font-size:14px;color:var(--muted);margin:4px 0 0 18px;padding:0}
+.log li{margin:2px 0}
+.gh{font-weight:600;background:var(--blueL);border-radius:8px;padding:6px 10px;margin:-2px -4px 8px}
+table.tv{border-collapse:collapse;margin:8px 0;font-family:"Cambria Math","Times New Roman",serif;font-size:18px}
+.tv td,.tv th{border:1.5px solid var(--line);padding:6px 10px;text-align:center}
+.tv th{background:var(--bg);font-weight:normal;color:var(--muted)}
+.tv td.hl{background:var(--greenL);color:var(--green);font-weight:700}
+.wmsg{min-height:26px;margin:8px 0;color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin:6px 0;min-height:40px}
+.chip{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:"Cambria Math","Times New Roman",serif;font-size:17px;border:2px solid var(--amber);background:var(--amberL);color:#8A4A10;transition:all .45s}
+.chip.b{border-color:var(--blue);background:var(--blueL);color:var(--blue)}
+.chip.gone{opacity:.15;transform:scale(.6)}
+.chip.neg{border-color:var(--red);background:var(--redL);color:var(--red)}
+.sl{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:6px 0}
+.sl input{flex:1;min-width:120px}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 10px}
+.tabs button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+svg text{font-family:"Cambria Math","Times New Roman",serif}
+.steps p{margin:6px 0}
+.cheer{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(80px);background:var(--green);color:#fff;padding:10px 18px;border-radius:30px;font-weight:600;transition:transform .35s;z-index:9}
+.cheer.show{transform:translateX(-50%) translateY(0)}
+.nav{display:flex;justify-content:space-between;gap:8px;margin:8px 0 30px}
+textarea{width:100%;min-height:160px;font:13px/1.4 ui-monospace,Menlo,monospace;border:1px solid var(--line);border-radius:8px;padding:8px}
+@media (max-width:480px){.m{font-size:19px}.big{font-size:22px}.ex input{width:100px}.tl{min-width:40px;height:40px;font-size:19px}}
+</style>
+</head>
+<body>
+<header><div class="in"><h1>Fractions et puissances</h1><span class="pts" id="pts"></span><button onclick="go(0)">Menu</button></div></header>
+<main id="main"></main>
+<div class="cheer" id="cheer"></div>
+<script>
+/* ---------- outils ---------- */
+const KEY='fractions-puissances-v1';
+let st={};try{st=JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){st={}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(st))}catch(e){}}
+const $=s=>document.querySelector(s);
+const gcd=(a,b)=>{a=Math.abs(a);b=Math.abs(b);while(b){[a,b]=[b,a%b]}return a||1};
+function red(n,d){if(d<0){n=-n;d=-d}const g=gcd(n,d);return[n/g,d/g]}
+function F(n,d){return `<span class="fr"><span>${n}</span><span>${d}</span></span>`}
+function fv(n,d){[n,d]=red(n,d);if(d===1)return String(n).replace('-','−');const s=n<0?'−':'';return s+F(Math.abs(n),d)}
+function parse(s){
+  s=s.replace(/\s/g,'').replace(/[−–]/g,'-').replace(',','.');
+  if(!s)return null;
+  let m=s.match(/^(-?\d+)\/(-?\d+)$/);if(m){const n=+m[1],d=+m[2];if(d===0)return null;return{n,d}}
+  m=s.match(/^-?\d+$/);if(m)return{n:+s,d:1};
+  m=s.match(/^-?\d*\.\d+$/);if(m){const k=(s.split('.')[1]||'').length,p=Math.pow(10,k);return{n:Math.round(+s*p),d:p}}
+  return null;
+}
+const PRAISE=['Bravo !','Exact !','Très bien !','Parfait !','Excellent !','Super, continue !'];
+function cheer(t){const c=$('#cheer');c.textContent=t||PRAISE[Math.floor(Math.random()*PRAISE.length)];c.classList.add('show');clearTimeout(c._t);c._t=setTimeout(()=>c.classList.remove('show'),1400)}
+function rec(id){return st[id]||(st[id]={})}
+function totalPts(){let n=0,t=0;LV.forEach(l=>l.ex.forEach((e,i)=>{t++;if((st[l.id]||{})[i]&&st[l.id][i].ok)n++}));return[n,t]}
+function updPts(){const[n,t]=totalPts();$('#pts').textContent=n+' / '+t+' réussis'}
+
+/* ---------- niveaux ---------- */
+const LV=[];
+function L(o){LV.push(o)}
+
+/* Niveau 1 : multiplier et simplifier en croix */
+L({id:'mul',title:'Multiplier des fractions',sub:'et simplifier en croix avant de calculer',
+intro:()=>`<div class="card"><h2>Multiplier des fractions</h2>
+<div class="rule">On multiplie les numérateurs entre eux et les dénominateurs entre eux : <span class="m">${F('a','b')} × ${F('c','d')} = ${F('a × c','b × d')}</span></div>
+<p>Avant de multiplier, on peut simplifier : <u>n'importe quel nombre du haut</u> avec <u>n'importe quel nombre du bas</u>, s'ils ont un diviseur commun.</p><ul style="margin:4px 0 8px 18px;padding:0"><li><u>en ligne droite</u> : dans la même fraction (6/9 : 6 et 9, divise par 3) ;</li><li><u>en croix</u> : d'une fraction à l'autre (2/3 × 5/2 : les deux 2) ;</li><li>et parfois <u>rien ne se simplifie</u> : on multiplie directement (2/3 × 4/5 = 8/15).</li></ul>
+<div class="tabs" id="cxT"></div>
+<div id="cx"></div>
+<div class="wmsg" id="cxm"></div>
+<button id="cxR">Recommencer</button></div>`,
+setup(){cross('cx',[[2,3,4,5],[2,3,5,2],[4,9,3,8],[6,9,2,5],[4,6,5,7],[10,4,3,5],[7,12,4,21]])},
+ex:[
+ {q:`${F(2,3)} × ${F(4,5)}`,a:[8,15],h:'Rien ne se simplifie ici : 2 × 4 en haut, 3 × 5 en bas.'},
+ {q:`${F(3,5)} × ${F(2,7)}`,a:[6,35],h:'Aucun nombre du haut n\'a de diviseur commun avec un nombre du bas : on multiplie directement.'},
+ {q:`${F(2,3)} × ${F(5,2)}`,a:[5,3],h:'Le 2 du haut et le 2 du bas se simplifient : il reste 5 en haut et 3 en bas.'},
+ {q:`${F(3,4)} × ${F(4,7)}`,a:[3,7],h:'Le 4 en haut et le 4 en bas se simplifient.'},
+ {q:`${F(6,9)} × ${F(2,5)}`,a:[4,15],h:'En ligne droite : 6 et 9 se simplifient par 3, il reste 2/3. Puis 2/3 × 2/5.'},
+ {q:`${F(4,6)} × ${F(5,7)}`,a:[10,21],h:'En ligne droite : 4/6 = 2/3. Puis 2 × 5 en haut, 3 × 7 en bas.'},
+ {q:`${F(4,9)} × ${F(3,8)}`,a:[1,6],h:'4 et 8 : on divise par 4 (il reste 1 et 2). 3 et 9 : on divise par 3 (il reste 1 et 3).'},
+ {q:`${F(6,5)} × ${F(10,3)}`,a:[4,1],h:'6 et 3 : divise par 3. 10 et 5 : divise par 5. Il reste 2 × 2 en haut, 1 × 1 en bas.'},
+ {q:`2 × ${F(5,6)}`,a:[5,3],h:'Un entier, c\'est une fraction sur 1 : 2 = 2/1. Puis 2 et 6 se simplifient par 2.'},
+ {q:`${F(7,12)} × ${F(4,21)}`,a:[1,9],h:'7 et 21 : divise par 7. 4 et 12 : divise par 4.'},
+ {q:`−${F(3,4)} × ${F(8,9)}`,a:[-2,3],h:'Le signe d\'abord : moins × plus = moins. Puis 3 et 9 (par 3), 4 et 8 (par 4).'}
+]});
+
+/* Niveau 2 : diviser par une fraction */
+L({id:'div',title:'Diviser par une fraction',sub:'c\'est multiplier par son inverse',
+intro:()=>`<div class="card"><h2>Diviser par une fraction</h2>
+<p>Combien de morceaux de taille ${F('1','d')} y a-t-il dans <b id="dvn">3</b> ?</p>
+<div class="sl">Nombre : <input type="range" id="dN" min="1" max="4" value="3"> Taille d'un morceau : <span class="tabs" id="dD" style="margin:0"></span></div>
+<svg id="dvs" viewBox="0 0 340 80" style="width:100%;max-width:560px"></svg>
+<p class="m" id="dvr"></p>
+<div class="rule">Diviser par une fraction, c'est <u>multiplier par son inverse</u> (on la retourne) :<br><span class="m">${F('a','b')} ÷ ${F('c','d')} = ${F('a','b')} × ${F('d','c')}</span></div>
+<div class="warn">Diviser par ${F(1,2)}, c'est multiplier par 2. C'est pour ça que dans une suite de raison ${F(1,2)}, on <u>remonte</u> d'un rang en multipliant par 2.</div></div>`,
+setup(){
+  let D=2;const dD=$('#dD');[2,3,4].forEach(d=>{const b=document.createElement('button');b.innerHTML='1/'+d;b.onclick=()=>{D=d;draw()};dD.appendChild(b)});
+  const dN=$('#dN');dN.oninput=draw;
+  function draw(){const N=+dN.value;$('#dvn').textContent=N;dD.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.textContent==='1/'+D));
+    const W=320/N;let s='';for(let i=0;i<N;i++){s+=`<rect x="${10+i*W}" y="10" width="${W}" height="40" fill="#fff" stroke="#1B2A41" stroke-width="2"/>`;for(let j=0;j<D;j++){const k=i*D+j;s+=`<rect x="${10+i*W+j*W/D+2}" y="14" width="${W/D-4}" height="32" rx="4" fill="${k%2?'#FBEEDD':'#E3EBFB'}"/><text x="${10+i*W+(j+.5)*W/D}" y="36" text-anchor="middle" font-size="${D*N>9?11:14}">${k+1}</text>`}}
+    s+=`<text x="10" y="72" font-size="13" fill="#5A6B82">${N} unité${N>1?'s':''}, coupée${N>1?'s':''} en morceaux de 1/${D}</text>`;
+    $('#dvs').innerHTML=s;$('#dvr').innerHTML=`${N} ÷ ${F(1,D)} = ${N} × ${D} = ${N*D}`}
+  draw();
+},
+ex:[
+ {q:`3 ÷ ${F(1,2)}`,a:[6,1],h:'Combien de moitiés dans 3 ? Retourne 1/2 : 3 × 2.'},
+ {q:`${F(1,12)} ÷ ${F(1,2)}`,a:[1,6],h:'1/12 × 2/1 = 2/12, puis simplifie.'},
+ {q:`${F(2,3)} ÷ ${F(4,9)}`,a:[3,2],h:'2/3 × 9/4. Simplifie en croix : 2 et 4, 9 et 3.'},
+ {q:`${F(5,6)} ÷ 5`,a:[1,6],h:'5 = 5/1, son inverse est 1/5. Donc 5/6 × 1/5.'},
+ {q:`${F(1,18)} ÷ ${F(1,3)}`,a:[1,6],h:'1/18 × 3/1 = 3/18.'},
+ {q:`−${F(3,4)} ÷ ${F(3,8)}`,a:[-2,1],h:'−3/4 × 8/3 : les 3 se simplifient, 8 et 4 aussi.'}
+]});
+
+/* Niveau 3 : fractions étagées */
+L({id:'eta',title:'Fractions de fractions',sub:'le grand trait est une division',
+intro:()=>`<div class="card"><h2>Fractions de fractions</h2>
+<p>Quand une fraction contient d'autres fractions, <u>le grand trait est une division</u>. On la transforme en ÷, puis on multiplie par l'inverse.</p>
+<div class="tabs" id="etT"></div>
+<div class="steps m" id="ets"></div>
+<button class="primary" id="etB">Étape suivante</button> <button id="etR">Recommencer</button></div>
+<div class="card"><h3>Simplifier directement une fraction de fractions</h3>
+<div class="rule"><span class="m">${'<span class="fr"><span>'+F('a','b')+'</span><span>'+F('c','d')+'</span></span>'} = ${F('a','b')} × ${F('d','c')} = ${F('a × d','b × c')}</span><br>
+Le <u>1er</u> (a) et le <u>4e</u> (d) finissent en haut. Le <u>2e</u> (b) et le <u>3e</u> (c) finissent en bas.<br>
+Donc on peut simplifier : le 1er avec le 3e, le 2e avec le 4e, et aussi dans une même petite fraction (1er avec 2e, 3e avec 4e). Mais jamais le 1er avec le 4e, ni le 2e avec le 3e.</div>
+<div class="tabs" id="dxT"></div>
+<div id="dx"></div>
+<div class="wmsg" id="dxm"></div>
+<button id="dxR">Recommencer</button></div>`,
+setup(){
+  const EX=[
+   {e:`<span class="fr"><span>${F(1,32)}</span><span style="border-top:3px solid #D2452F">${F(1,4)}</span></span>`,s:[`${F(1,32)} ÷ ${F(1,4)}`,`${F(1,32)} × ${F(4,1)}`,`${F(4,32)} = ${F(1,8)}`]},
+   {e:`<span class="fr"><span>${F(5,2)}</span><span style="border-top:3px solid #D2452F">40</span></span>`,s:[`${F(5,2)} ÷ 40`,`${F(5,2)} × ${F(1,40)}`,`${F(5,80)} = ${F(1,16)}`]},
+   {e:`<span class="fr"><span>12</span><span style="border-top:3px solid #D2452F">${F(3,4)}</span></span>`,s:[`12 ÷ ${F(3,4)}`,`12 × ${F(4,3)}`,`${F(48,3)} = 16`]}];
+  const lab=['1. Le grand trait devient ÷ :','2. On multiplie par l\'inverse :','3. On calcule et on simplifie :'];
+  let k=0,step=0;const T=$('#etT');
+  EX.forEach((x,i)=>{const b=document.createElement('button');b.textContent='Exemple '+(i+1);b.onclick=()=>{k=i;step=0;draw()};T.appendChild(b)});
+  function draw(){T.querySelectorAll('button').forEach((b,i)=>b.classList.toggle('on',i===k));let h=`<p>${EX[k].e} <span class="small">(le trait rouge est le grand trait)</span></p>`;for(let i=0;i<step;i++)h+=`<p><span class="small">${lab[i]}</span> = ${EX[k].s[i]}</p>`;$('#ets').innerHTML=h;$('#etB').disabled=step>=3}
+  $('#etB').onclick=()=>{step++;draw()};$('#etR').onclick=()=>{step=0;draw()};draw();
+  cross('dx',[[1,32,1,4],[4,9,8,3],[6,35,9,14],[5,2,40,1]],'dbl');
+},
+ex:[
+ {q:`<span class="fr"><span>${F(1,2)}</span><span>${F(1,4)}</span></span>`,a:[2,1],h:'1/2 ÷ 1/4 = 1/2 × 4/1.'},
+ {q:`<span class="fr"><span>${F(1,32)}</span><span>${F(1,4)}</span></span>`,a:[1,8],h:'1/32 × 4/1 = 4/32.'},
+ {q:`<span class="fr"><span>${F(5,2)}</span><span>40</span></span>`,a:[1,16],h:'5/2 ÷ 40 = 5/2 × 1/40 = 5/80.'},
+ {q:`<span class="fr"><span>12</span><span>${F(3,4)}</span></span>`,a:[16,1],h:'12 × 4/3.'},
+ {q:`<span class="fr"><span>${F(4,9)}</span><span>${F(8,3)}</span></span>`,a:[1,6],h:'1er et 3e : 4 et 8, divise par 4 (il reste 1 et 2). 2e et 4e : 9 et 3, divise par 3 (il reste 3 et 1). Résultat : (1 × 1)/(3 × 2).'},
+ {q:`<span class="fr"><span>${F(6,35)}</span><span>${F(9,14)}</span></span>`,a:[4,15],h:'1er et 3e : 6 et 9, divise par 3 (2 et 3). 2e et 4e : 35 et 14, divise par 7 (5 et 2). Résultat : (2 × 2)/(5 × 3).'},
+ {q:`<span class="fr"><span>${F(2,9)}</span><span>−${F(2,3)}</span></span>`,a:[-1,3],h:'2/9 × (−3/2). Les 2 se simplifient, 3 et 9 aussi.'},
+ {q:`<span class="fr"><span>${F(1,3)}</span><span>1 + ${F(2,3)}</span></span>`,a:[1,5],h:'Calcule d\'abord le bas : 1 + 2/3 = 3/3 + 2/3 = 5/3. Puis 1/3 ÷ 5/3.'}
+]});
+
+/* Niveau 4 : additionner / soustraire */
+L({id:'add',title:'Additionner et soustraire',sub:'d\'abord le même dénominateur',
+intro:()=>`<div class="card"><h2>Additionner et soustraire</h2>
+<p>On ne peut ajouter que des morceaux <u>de la même taille</u>. On met donc les fractions au même dénominateur, puis on ajoute seulement les numérateurs.</p>
+<div class="tabs" id="adT"></div>
+<svg id="ads" viewBox="0 0 340 200" style="width:100%;max-width:560px"></svg>
+<p class="m" id="adr"></p>
+<button class="primary" id="adB">Couper en morceaux de même taille</button>
+<div class="warn">Piège : ${F(1,2)} + ${F(1,3)} n'est <u>pas</u> ${F(2,5)}. On n'ajoute jamais les dénominateurs : ${F(2,5)} est même plus petit que ${F(1,2)} !</div></div>`,
+setup(){
+  const EX=[[1,2,1,3,1],[1,4,2,3,1],[5,6,1,4,-1]];let k=0,cut=false;const T=$('#adT');
+  EX.forEach((x,i)=>{const b=document.createElement('button');b.innerHTML=`${x[0]}/${x[1]} ${x[4]>0?'+':'−'} ${x[2]}/${x[3]}`;b.onclick=()=>{k=i;cut=false;draw()};T.appendChild(b)});
+  function barSVG(y,n,d,col,lab){let s='';const W=300;for(let j=0;j<d;j++)s+=`<rect x="${20+j*W/d}" y="${y}" width="${W/d}" height="34" fill="${j<n?col:'#fff'}" stroke="#1B2A41" stroke-width="1.5"/>`;return s+`<text x="20" y="${y-6}" font-size="14" fill="#5A6B82">${lab}</text>`}
+  function draw(){T.querySelectorAll('button').forEach((b,i)=>b.classList.toggle('on',i===k));
+    const[a,b,c,d,sg]=EX[k];const D=b*d/gcd(b,d),A=a*D/b,C=c*D/d,R=A+sg*C;let s='';
+    if(!cut){s=barSVG(24,a,b,'#E3EBFB',`${a}/${b}`)+barSVG(92,c,d,'#FBEEDD',`${c}/${d}`);$('#adr').innerHTML=`Les morceaux n'ont pas la même taille : on ne peut pas encore ${sg>0?'ajouter':'soustraire'}.`}
+    else{s=barSVG(24,A,D,'#E3EBFB',`${a}/${b} = ${A}/${D}`)+barSVG(92,C,D,'#FBEEDD',`${c}/${d} = ${C}/${D}`)+barSVG(160,R,D,'#E4F4EA',`résultat : ${R}/${D}`);
+      $('#adr').innerHTML=`${F(a,b)} ${sg>0?'+':'−'} ${F(c,d)} = ${F(A,D)} ${sg>0?'+':'−'} ${F(C,D)} = ${F(R,D)}${gcd(R,D)>1?' = '+fv(R,D):''}`}
+    $('#ads').innerHTML=s;$('#adB').disabled=cut}
+  $('#adB').onclick=()=>{cut=true;draw()};draw();
+},
+ex:[
+ {q:`${F(2,7)} + ${F(3,7)}`,a:[5,7],h:'Même dénominateur : on ajoute seulement les numérateurs.'},
+ {q:`${F(1,2)} + ${F(1,4)}`,a:[3,4],h:'1/2 = 2/4.'},
+ {q:`${F(1,2)} + ${F(1,3)}`,a:[5,6],h:'Dénominateur commun : 6. 1/2 = 3/6 et 1/3 = 2/6.'},
+ {q:`${F(5,6)} − ${F(1,4)}`,a:[7,12],h:'Dénominateur commun : 12. 5/6 = 10/12 et 1/4 = 3/12.'},
+ {q:`2 − ${F(3,5)}`,a:[7,5],h:'2 = 10/5.'},
+ {q:`${F(1,3)} − ${F(3,4)}`,a:[-5,12],h:'4/12 − 9/12. Le résultat est négatif.'},
+ {q:`${F(3,4)} + ${F(5,6)}`,a:[19,12],h:'Dénominateur commun : 12 (pas 24, mais 24 marche aussi si tu simplifies ensuite).'}
+]});
+
+/* Niveau : fractions et parenthèses */
+const RB=t=>`<span style="color:#D2452F;font-weight:700">${t}</span>`;
+L({id:'par',title:'Fractions et parenthèses',sub:'couper une fraction en deux, les parenthèses invisibles',
+intro:()=>`<div class="card"><h2>Couper une fraction en deux</h2>
+<p>${F('a + b','c')}, ce sont a + b morceaux de taille ${F(1,'c')}. On peut les compter en deux paquets.</p>
+<div class="sl">a = <input type="range" id="pa" min="1" max="5" value="2"><b id="pav">2</b> &nbsp; b = <input type="range" id="pb" min="1" max="5" value="3"><b id="pbv">3</b> &nbsp; c = <input type="range" id="pc" min="2" max="6" value="4"><b id="pcv">4</b></div>
+<svg id="psv" viewBox="0 0 340 70" style="width:100%;max-width:560px"></svg>
+<p class="m" id="pr"></p>
+<div class="rule"><span class="m">${F('a + b','c')} = ${F('a','c')} + ${F('b','c')}</span> &nbsp; : chaque morceau du haut garde le même dénominateur.<br>
+Dans les suites : <span class="m">${F('1 + 2u<sub>n</sub>','u<sub>n</sub>')} = ${F(1,'u<sub>n</sub>')} + ${F('2u<sub>n</sub>','u<sub>n</sub>')} = ${F(1,'u<sub>n</sub>')} + 2</span></div>
+<div class="warn">On peut couper <u>le haut</u>, jamais <u>le bas</u> : <span class="m">${F(6,'2 + 3')}</span> = ${F(6,5)}, mais ${F(6,2)} + ${F(6,3)} = 3 + 2 = 5. Ce n'est pas pareil.</div></div>
+<div class="card"><h2>Les parenthèses invisibles</h2>
+<p>Le trait de fraction regroupe tout ce qui est au-dessus, comme s'il y avait des parenthèses. Quand on multiplie, le nombre multiplie <u>tout</u> le haut.</p>
+<div class="tabs" id="ivT"></div>
+<div class="steps m" id="ivs"></div>
+<button class="primary" id="ivB">Étape suivante</button> <button id="ivR">Recommencer</button></div>`,
+setup(){
+  const pa=$('#pa'),pb=$('#pb'),pc=$('#pc');pa.oninput=pb.oninput=pc.oninput=draw;
+  function draw(){const a=+pa.value,b=+pb.value,c=+pc.value;$('#pav').textContent=a;$('#pbv').textContent=b;$('#pcv').textContent=c;
+    const w=Math.min(300/(a+b),60);let s='';
+    for(let i=0;i<a+b;i++)s+=`<rect x="${20+i*w}" y="8" width="${w-4}" height="34" rx="5" fill="${i<a?'#E3EBFB':'#FBEEDD'}" stroke="${i<a?'#2F5BD3':'#D9822B'}" stroke-width="2"/><text x="${20+i*w+(w-4)/2}" y="30" text-anchor="middle" font-size="12">1/${c}</text>`;
+    s+=`<text x="20" y="62" font-size="13" fill="#2F5BD3">${a} morceaux bleus</text><text x="${20+a*w}" y="62" font-size="13" fill="#D9822B">${b} orange</text>`;
+    $('#psv').innerHTML=s;$('#pr').innerHTML=`${F(a+' + '+b,c)} = ${F(a+b,c)} &nbsp; et &nbsp; ${F(a,c)} + ${F(b,c)} = ${F(a+b,c)}`}
+  draw();
+  const EX=[
+    {e:`5 × ${F('2 + 3',4)}`,s:[`${F('5 × '+RB('(')+'2 + 3'+RB(')'),4)} <span class="small">le 5 multiplie tout le haut</span>`,`${F('5 × 2 + 5 × 3',4)} = ${F('10 + 15',4)}`,`${F(25,4)}`],
+     w:`Erreur fréquente : ${F('5 × 2 + 3',4)} = ${F(13,4)}. Vérifie : ${F('2 + 3',4)} = ${F(5,4)}, et 5 × ${F(5,4)} = ${F(25,4)}.`},
+    {e:`2 × ${F('x + 3',5)}`,s:[`${F('2'+RB('(')+'x + 3'+RB(')'),5)}`,`${F('2x + 6',5)}`,`${F('2x + 6',5)} <span class="small">(et pas ${F('2x + 3',5)})</span>`],w:''},
+    {e:`4 × ${F('4 + 3u<sub>n</sub>','4u<sub>n</sub>')}`,s:[`${F('4 × '+RB('(')+'4 + 3u<sub>n</sub>'+RB(')'),'4 × u<sub>n</sub>')} <span class="small">le haut et le bas sont des produits</span>`,`${F('<s style="text-decoration-color:#D2452F">4</s> × (4 + 3u<sub>n</sub>)','<s style="text-decoration-color:#D2452F">4</s> × u<sub>n</sub>')} <span class="small">on simplifie le facteur 4</span>`,`${F('4 + 3u<sub>n</sub>','u<sub>n</sub>')} = ${F(4,'u<sub>n</sub>')} + 3`],
+     w:`Attention : dans ${F('4 + 3u<sub>n</sub>',4)}, on ne peut <u>pas</u> barrer le 4 du haut avec le 4 du bas, car en haut il est <u>ajouté</u>, pas multiplié. On ne simplifie que des facteurs (des ×), jamais des termes (des +).`}];
+  let k=0,step=0;const T=$('#ivT');
+  EX.forEach((x,i)=>{const b=document.createElement('button');b.textContent='Exemple '+(i+1);b.onclick=()=>{k=i;step=0;d2()};T.appendChild(b)});
+  function d2(){T.querySelectorAll('button').forEach((b,i)=>b.classList.toggle('on',i===k));const E=EX[k];let h=`<p>${E.e}</p>`;for(let i=0;i<step;i++)h+=`<p>= ${E.s[i]}</p>`;if(step>=3&&E.w)h+=`<div class="warn" style="font-family:system-ui,sans-serif;font-size:15px">${E.w}</div>`;$('#ivs').innerHTML=h;$('#ivB').disabled=step>=3}
+  $('#ivB').onclick=()=>{step++;d2()};$('#ivR').onclick=()=>{step=0;d2()};d2();
+},
+ex:[
+ {q:`${F('2 + 3',4)} = ?`,t:'c',o:[`${F(2,4)} + ${F(3,4)}`,`${F(2,4)} + 3`,`2 + ${F(3,4)}`],c:0,h:'Chaque morceau du haut garde le même dénominateur.'},
+ {q:`${F('6 + 9',3)}`,a:[5,1],h:'6/3 + 9/3 = 2 + 3.'},
+ {q:`${F('x + 5',5)} = ?`,t:'c',o:[`${F('x',5)} + 1`,'x + 1','x'],c:0,h:'x/5 + 5/5. On ne barre pas le 5 avec le 5 du haut : il est ajouté, pas multiplié.'},
+ {q:`${F('1 + 2u<sub>n</sub>','u<sub>n</sub>')} = ?`,t:'c',o:[`${F(1,'u<sub>n</sub>')} + 2`,`${F(1,'u<sub>n</sub>')} + 2u<sub>n</sub>`,'1 + 2'],c:0,h:'1/u<sub>n</sub> + 2u<sub>n</sub>/u<sub>n</sub>, et u<sub>n</sub>/u<sub>n</sub> = 1.'},
+ {q:`${F('3 + u<sub>n</sub>','u<sub>n</sub>')} = ?`,t:'c',o:[`${F(3,'u<sub>n</sub>')} + 1`,'3 + 1',`${F(3,'u<sub>n</sub>')} + u<sub>n</sub>`],c:0,h:'3/u<sub>n</sub> + u<sub>n</sub>/u<sub>n</sub>.'},
+ {q:`${F('4 + 3u<sub>n</sub>','u<sub>n</sub>')} = ${F(4,'u<sub>n</sub>')} + ?`,a:[3,1],h:'3u<sub>n</sub>/u<sub>n</sub> = 3.'},
+ {q:`${F(6,'2 + 3')}`,a:[6,5],h:'On calcule d\'abord le bas : 2 + 3 = 5. On ne coupe jamais le bas.'},
+ {q:`5 × ${F('2 + 3',4)}`,a:[25,4],h:'Le 5 multiplie tout le haut : 5 × 5 = 25. Ou bien : (2 + 3)/4 = 5/4, puis 5 × 5/4.'},
+ {q:`3 × ${F('1 + 4',10)}`,a:[3,2],h:'3 × 5 / 10 = 15/10.'},
+ {q:`2 × ${F('x + 3',5)} = ?`,t:'c',o:[F('2x + 6',5),F('2x + 3',5),F('2x + 6',10)],c:0,h:'Le 2 multiplie x ET 3 : 2(x + 3) = 2x + 6. Le bas ne change pas.'},
+ {q:`3 × ${F('2u<sub>n</sub> + 1','3u<sub>n</sub>')} = ?`,t:'c',o:[F('2u<sub>n</sub> + 1','u<sub>n</sub>'),F('6u<sub>n</sub> + 1','3u<sub>n</sub>'),F('2u<sub>n</sub> + 3','3u<sub>n</sub>')],c:0,h:'3 × (2u<sub>n</sub> + 1) / (3 × u<sub>n</sub>) : le facteur 3 se simplifie en haut et en bas.'},
+ {q:`4 × ${F('4 + 3u<sub>n</sub>','4u<sub>n</sub>')} = ?`,t:'c',o:[F('4 + 3u<sub>n</sub>','u<sub>n</sub>'),F('16 + 3u<sub>n</sub>','4u<sub>n</sub>'),F('4 + 3u<sub>n</sub>','4u<sub>n</sub>')],c:0,h:'4 × (4 + 3u<sub>n</sub>) / (4 × u<sub>n</sub>) : le 4 devant se simplifie avec le 4 du bas.'},
+ {q:`${F('4 + 3u<sub>n</sub>',4)} = ?`,t:'c',o:[`1 + ${F('3u<sub>n</sub>',4)}`,'3u<sub>n</sub>',`4 + ${F('3u<sub>n</sub>',4)}`],c:0,h:'On coupe : 4/4 + 3u<sub>n</sub>/4. On ne barre pas le 4 du haut : il est ajouté.'}
+]});
+
+/* Niveau 5 : puissances de même base */
+L({id:'pow',title:'Puissances de même base',sub:'on compte les facteurs',
+intro:()=>`<div class="card"><h2>Puissances de même base</h2>
+<p>Une puissance, c'est un nombre de facteurs : 2<sup>3</sup> = 2 × 2 × 2. Pour multiplier ou diviser, il suffit de <u>compter</u> les facteurs.</p>
+<div class="tabs" id="pwT"><button class="on" data-m="x">Multiplier</button><button data-m="d">Diviser</button></div>
+<div class="sl">m = <input type="range" id="pm" min="1" max="6" value="4"><b id="pmv">4</b> &nbsp; n = <input type="range" id="pn" min="1" max="6" value="2"><b id="pnv">2</b></div>
+<div id="pwv"></div>
+<button class="primary" id="pwB">Simplifier</button>
+<div class="rule m" style="font-size:18px">a<sup>m</sup> × a<sup>n</sup> = a<sup>m+n</sup> &nbsp;&nbsp; ${F('a<sup>m</sup>','a<sup>n</sup>')} = a<sup>m−n</sup> &nbsp;&nbsp; (a<sup>m</sup>)<sup>n</sup> = a<sup>m×n</sup> &nbsp;&nbsp; (${F('a','b')})<sup>n</sup> = ${F('a<sup>n</sup>','b<sup>n</sup>')}</div>
+<div class="warn">Dans les suites : ${F('3<sup>n+1</sup>','3<sup>n</sup>')} = 3<sup>n+1−n</sup> = 3<sup>1</sup> = 3. Un seul facteur 3 de plus en haut.</div></div>`,
+setup(){
+  let mode='x',done=false;const pm=$('#pm'),pn=$('#pn');
+  $('#pwT').querySelectorAll('button').forEach(b=>b.onclick=()=>{mode=b.dataset.m;done=false;$('#pwT').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));draw()});
+  pm.oninput=pn.oninput=()=>{done=false;draw()};
+  function chips(k,cls,gone){let s='';for(let i=0;i<k;i++)s+=`<span class="chip ${cls} ${i<gone?'gone':''}">2</span>`;return s}
+  function draw(){const m=+pm.value,n=+pn.value;$('#pmv').textContent=m;$('#pnv').textContent=n;let h;
+    if(mode==='x'){h=`<p class="m">2<sup>${m}</sup> × 2<sup>${n}</sup></p><div class="chips">${chips(m,'')}<b style="margin:0 6px">×</b>${chips(n,'b')}</div>`;
+      if(done)h+=`<p>On compte : ${m} + ${n} = ${m+n} facteurs, donc <span class="m">2<sup>${m}</sup> × 2<sup>${n}</sup> = 2<sup>${m+n}</sup> = ${Math.pow(2,m+n)}</span></p>`}
+    else{const c=Math.min(m,n);h=`<p class="m">${F('2<sup>'+m+'</sup>','2<sup>'+n+'</sup>')}</p><div class="chips">${chips(m,'',done?c:0)}</div><div style="border-top:2px solid #1B2A41;max-width:${Math.max(m,n)*41}px"></div><div class="chips">${chips(n,'b',done?c:0)}</div>`;
+      if(done)h+=`<p>Chaque 2 du haut se simplifie avec un 2 du bas : ${c} paires disparaissent. ${m>n?`Il reste ${m-n} facteur${m-n>1?'s':''} en haut : <span class="m">2<sup>${m-n}</sup> = ${Math.pow(2,m-n)}</span>`:m<n?`Il reste ${n-m} facteur${n-m>1?'s':''} en bas : <span class="m">${F(1,'2<sup>'+(n-m)+'</sup>')} = ${F(1,Math.pow(2,n-m))}</span>`:'Il ne reste rien : le résultat est 1.'} (m − n = ${m-n})</p>`}
+    $('#pwv').innerHTML=h;$('#pwB').disabled=done}
+  $('#pwB').onclick=()=>{done=true;draw()};draw();
+},
+ex:[
+ {q:`2<sup>3</sup> × 2<sup>4</sup> = 2<sup>?</sup>`,a:[7,1],lab:'exposant',h:'3 facteurs + 4 facteurs.'},
+ {q:`${F('3<sup>5</sup>','3<sup>2</sup>')} = 3<sup>?</sup>`,a:[3,1],lab:'exposant',h:'5 facteurs en haut, 2 en bas : 2 paires disparaissent.'},
+ {q:`(5<sup>2</sup>)<sup>3</sup> = 5<sup>?</sup>`,a:[6,1],lab:'exposant',h:'(5 × 5) × (5 × 5) × (5 × 5).'},
+ {q:`(${F(1,2)})<sup>3</sup>`,a:[1,8],h:'1/2 × 1/2 × 1/2 = 1/(2 × 2 × 2).'},
+ {q:`${F('3<sup>n+1</sup>','3<sup>n</sup>')}`,t:'c',o:['3','3<sup>n</sup>',F(1,3),'n'],c:0,h:'n + 1 − n = 1.'},
+ {q:`(${F(1,2)})<sup>2</sup> × (${F(1,2)})<sup>3</sup>`,a:[1,32],h:'(1/2)<sup>5</sup>.'},
+ {q:`${F('2<sup>n+1</sup>','2<sup>n−1</sup>')}`,t:'c',o:['2','4','2<sup>n</sup>','2<sup>2n</sup>'],c:1,h:'(n + 1) − (n − 1) = n + 1 − n + 1 = 2.'},
+ {q:`${F('3<sup>n</sup>','3<sup>n+1</sup>')}`,a:[1,3],h:'Il y a un facteur 3 de plus en bas.'}
+]});
+
+/* Niveau 6 : signes */
+L({id:'sgn',title:'Puissances et signe moins',sub:'pair : positif, impair : le signe reste',
+intro:()=>`<div class="card"><h2>Puissances d'un nombre négatif</h2>
+<p>Multiplie par (−2) encore et encore, et regarde le signe.</p>
+<div class="chips" id="sgc"></div>
+<p class="m" id="sgr"></p>
+<button class="primary" id="sgB">× (−2)</button> <button id="sgR">Recommencer</button>
+<div class="rule">Les signes moins vont par <u>paires</u>, et chaque paire donne un plus : (−)(−) = +.<br>
+Exposant <u>pair</u> : toutes les paires sont complètes, le résultat est <u>positif</u>. Exposant <u>impair</u> : il reste un moins tout seul, le signe ne change pas.</div>
+<div class="warn">Attention : (−2)<sup>4</sup> = 16, mais −2<sup>4</sup> = −16. Sans parenthèses, la puissance ne s'applique qu'au 2.<br>
+Conséquence : q<sup>4</sup> = ${F(1,16)} a <u>deux</u> solutions, q = ${F(1,2)} et q = −${F(1,2)}. Mais q<sup>3</sup> = −8 n'en a qu'une : q = −2.</div></div>`,
+setup(){
+  let k=1;function draw(){let s='';for(let i=0;i<k;i++)s+=`<span class="chip neg" style="width:44px;border-radius:10px">−2</span>${i%2===1?'<span class="small" style="margin-right:6px">+</span>':''}`;
+    $('#sgc').innerHTML=s;const v=Math.pow(-2,k);$('#sgr').innerHTML=`(−2)<sup>${k}</sup> = ${String(v).replace('-','−')} &nbsp; <span class="small">exposant ${k%2?'impair : un moins reste seul, résultat négatif':'pair : '+k/2+' paire'+(k>2?'s':'')+', résultat positif'}</span>`}
+  $('#sgB').onclick=()=>{if(k<8)k++;draw()};$('#sgR').onclick=()=>{k=1;draw()};draw();
+},
+ex:[
+ {q:`(−1)<sup>5</sup>`,a:[-1,1],h:'5 est impair.'},
+ {q:`(−2)<sup>4</sup>`,a:[16,1],h:'4 est pair : le résultat est positif, 2<sup>4</sup> = 16.'},
+ {q:`(−3)<sup>3</sup>`,a:[-27,1],h:'3 est impair : 3<sup>3</sup> = 27, et le signe reste moins.'},
+ {q:`−2<sup>4</sup>`,a:[-16,1],h:'Pas de parenthèses : on calcule 2<sup>4</sup>, puis on met le moins devant.'},
+ {q:`(−${F(1,2)})<sup>2</sup>`,a:[1,4],h:'Pair : positif. (1/2)<sup>2</sup> = 1/4.'},
+ {q:`(−${F(1,2)})<sup>3</sup>`,a:[-1,8],h:'Impair : négatif. (1/2)<sup>3</sup> = 1/8.'},
+ {q:`q<sup>3</sup> = −8, donc q = ?`,t:'c',o:['q = 2','q = −2','q = 2 ou q = −2'],c:1,h:'3 est impair : le signe de q est le signe du résultat. Vérifie : 2<sup>3</sup> = 8, pas −8.'},
+ {q:`q<sup>4</sup> = ${F(1,16)}, donc q = ?`,t:'c',o:[`q = ${F(1,2)}`,`q = −${F(1,2)}`,`q = ${F(1,2)} ou q = −${F(1,2)}`],c:2,h:'4 est pair : (1/2)<sup>4</sup> et (−1/2)<sup>4</sup> donnent tous les deux 1/16.'},
+ {q:`q<sup>2</sup> = −4, donc q = ?`,t:'c',o:['q = 2','q = −2','pas de solution'],c:2,h:'Un carré est toujours positif ou nul.'}
+]});
+
+/* Niveau : suites géométriques, les bases */
+const un=(i,v)=>`${v||'u'}<sub>${i}</sub>`;
+L({id:'geo',title:'Suites géométriques',sub:'calculer des termes, retrouver q, le sens de variation',
+intro:()=>`<div class="card"><h2>Suites géométriques</h2>
+<div class="rule">(u<sub>n</sub>) géométrique de raison q : on passe d'un terme au suivant en <u>multipliant</u> par q.<br><span class="m">u<sub>n</sub> = u<sub>0</sub> × q<sup>n</sup></span> &nbsp; et plus généralement &nbsp; <span class="m">u<sub>n</sub> = u<sub>p</sub> × q<sup>n−p</sup></span></div>
+<p>Choisis u<sub>0</sub> et q, puis fais avancer la suite.</p>
+<div class="sl">u<sub>0</sub> = <input type="range" id="g0" min="-4" max="8" value="3"><b id="g0v">3</b></div>
+<div class="tabs" id="gq"></div>
+<div class="chips" id="gc"></div>
+<p class="m" id="gr" style="font-size:18px"></p>
+<div class="warn">Avancer d'un rang : × q. Reculer d'un rang : ÷ q. Reculer de 2 rangs : ÷ q<sup>2</sup>.<br>Si q est négatif, les signes alternent : la suite n'est ni croissante ni décroissante.</div></div>`,
+setup(){
+  const Q=[[2,1],[3,1],[1,2],[-2,1],[-1,2]];let q=Q[0];const g0=$('#g0');
+  Q.forEach(x=>{const b=document.createElement('button');b.innerHTML='q = '+(x[1]===1?String(x[0]).replace('-','−'):(x[0]<0?'−':'')+Math.abs(x[0])+'/'+x[1]);b.onclick=()=>{q=x;draw()};$('#gq').appendChild(b)});
+  g0.oninput=draw;
+  function draw(){const u0=+g0.value;$('#g0v').textContent=String(u0).replace('-','−');
+    $('#gq').querySelectorAll('button').forEach((b,i)=>b.classList.toggle('on',Q[i]===q));
+    let n=u0,d=1,h='';const vals=[];for(let k=0;k<6;k++){[n,d]=red(n,d);vals.push([n,d]);h+=`<span class="chip ${n<0?'neg':(k%2?'b':'')}" style="width:auto;min-width:44px;border-radius:10px;padding:0 6px">${d===1?String(n).replace('-','−'):(n<0?'−':'')+Math.abs(n)+'/'+d}</span>${k<5?'<span class="small">×q</span>':''}`;n*=q[0];d*=q[1]}
+    $('#gc').innerHTML=h;
+    const inc=vals.every((v,i)=>i===0||v[0]/v[1]>vals[i-1][0]/vals[i-1][1]),dec=vals.every((v,i)=>i===0||v[0]/v[1]<vals[i-1][0]/vals[i-1][1]);
+    $('#gr').innerHTML=u0===0?'Avec u<sub>0</sub> = 0, tous les termes valent 0.':`u<sub>n</sub> = ${String(u0).replace('-','−')} × (${q[1]===1?String(q[0]).replace('-','−'):(q[0]<0?'−':'')+F(Math.abs(q[0]),q[1])})<sup>n</sup> : la suite est ${inc?'croissante':dec?'décroissante':'ni croissante ni décroissante'}.`}
+  draw();
+},
+ex:[
+ {q:`${un(0)} = 2 et q = 3. Calcule ${un(4)}.`,a:[162,1],h:'u<sub>4</sub> = u<sub>0</sub> × q<sup>4</sup> = 2 × 3<sup>4</sup> = 2 × 81.'},
+ {q:`${un('n')} = 5 × 2<sup>n</sup>. Calcule ${un(3)}.`,a:[40,1],h:'5 × 2<sup>3</sup> = 5 × 8.'},
+ {q:`${un(0)} = 3 et q = −2. Calcule ${un(3)}.`,a:[-24,1],h:'u<sub>3</sub> = 3 × (−2)<sup>3</sup>. 3 est impair : (−2)<sup>3</sup> = −8.'},
+ {q:`${un(2)} = 18 et q = 3. Calcule ${un(0)}.`,a:[2,1],h:'On recule de 2 rangs : on divise deux fois par 3, donc par 9.'},
+ {q:`${un(5)} = ${F(1,4)} et q = ${F(1,2)}. Calcule ${un(3)}.`,a:[1,1],h:'On recule de 2 rangs : u<sub>3</sub> = u<sub>5</sub> ÷ q<sup>2</sup> = 1/4 ÷ 1/4.'},
+ {q:`${un(1)} = ${F(1,3)} et q = ${F(1,3)}. Calcule ${un(0)}.`,a:[1,1],h:'u<sub>0</sub> = u<sub>1</sub> ÷ q = 1/3 ÷ 1/3.'},
+ {q:`${un(0)} = 7 et q = ${F(1,2)}. Alors ${un('n')} = ?`,t:'c',o:[`7 × (${F(1,2)})<sup>n</sup>`,`(${F(7,2)})<sup>n</sup>`,`7 + ${F('n',2)}`],c:0,h:'u<sub>n</sub> = u<sub>0</sub> × q<sup>n</sup> : la puissance ne porte que sur q.'},
+ {q:`${un(1)} = 6 et q = 3. Alors ${un('n')} = ?`,t:'c',o:['6 × 3<sup>n</sup>','6 × 3<sup>n−1</sup>','3 × 6<sup>n−1</sup>'],c:1,h:'u<sub>n</sub> = u<sub>1</sub> × q<sup>n−1</sup>. Vérifie avec n = 1 : tu dois retrouver 6.'},
+ {q:`${un(2)} = 12 et ${un(4)} = 48. Alors q = ?`,t:'c',o:['2','−2','2 ou −2'],c:2,h:'q<sup>2</sup> = 48 ÷ 12 = 4. Exposant pair : deux solutions.'},
+ {q:`${un(1)} = −2 et ${un(4)} = 16. Calcule q.`,a:[-2,1],h:'q<sup>3</sup> = 16 ÷ (−2) = −8. Exposant impair : une seule solution.'},
+ {q:`${un(0)} = 5 et q = ${F(1,2)}. La suite est…`,t:'c',o:['croissante','décroissante','ni l\'un ni l\'autre'],c:1,h:'5 ; 2,5 ; 1,25… chaque terme est la moitié du précédent.'},
+ {q:`${un(0)} = −3 et q = 2. La suite est…`,t:'c',o:['croissante','décroissante','ni l\'un ni l\'autre'],c:1,h:'−3 ; −6 ; −12… les termes sont de plus en plus négatifs.'},
+ {q:`${un(0)} = 1 et q = −2. La suite est…`,t:'c',o:['croissante','décroissante','ni l\'un ni l\'autre'],c:2,h:'1 ; −2 ; 4 ; −8… les signes alternent.'}
+]});
+
+/* Niveau 7 : suites */
+L({id:'sui',title:'Ta fiche, pas à pas',sub:'les exercices 4d, 5 et 6, en petites étapes',
+intro:()=>`<div class="card"><h2>Ta fiche, pas à pas</h2>
+<div class="rule">(u<sub>n</sub>) géométrique de raison q : u<sub>n+1</sub> = q × u<sub>n</sub> et <span class="m">u<sub>n</sub> = u<sub>p</sub> × q<sup>n−p</sup></span>.<br>Pour avancer d'un rang : × q. Pour reculer d'un rang : ÷ q.</div>
+<p>Les exercices reprennent ceux de ta fiche, découpés en petites étapes. Tu as déjà tout ce qu'il faut dans les niveaux précédents.</p></div>`,
+setup(){},
+ex:[
+ {q:`u<sub>0</sub> = 3 et q = ${F(1,2)}. Calcule u<sub>1</sub>.`,a:[3,2],h:'u<sub>1</sub> = u<sub>0</sub> × q = 3 × 1/2.'},
+ {q:`u<sub>3</sub> = ${F(1,12)} et q = ${F(1,2)}. Calcule u<sub>2</sub>.`,a:[1,6],h:'On recule : u<sub>2</sub> = u<sub>3</sub> ÷ q = 1/12 ÷ 1/2 = 1/12 × 2 (niveau 2).'},
+ {q:`Même suite : calcule u<sub>0</sub>.`,a:[2,3],h:'u<sub>0</sub> = u<sub>3</sub> ÷ q<sup>3</sup> = 1/12 ÷ 1/8 = 1/12 × 8 = 8/12. Ou bien : recule encore deux fois en multipliant par 2.'},
+ {q:`u<sub>2</sub> = ${F(1,4)} et u<sub>5</sub> = ${F(1,32)}. Que vaut q<sup>3</sup> ?`,a:[1,8],h:'u<sub>5</sub> = u<sub>2</sub> × q<sup>3</sup>, donc q<sup>3</sup> = (1/32) ÷ (1/4) : une fraction de fractions (niveau 3).'},
+ {q:`Donc q = ?`,a:[1,2],h:'Quel nombre multiplié 3 fois par lui-même donne 1/8 ? 3 est impair : une seule réponse.'},
+ {q:`Et u<sub>0</sub> = ?`,a:[1,1],h:'u<sub>2</sub> = u<sub>0</sub> × q<sup>2</sup>, donc u<sub>0</sub> = (1/4) ÷ (1/2)<sup>2</sup> = (1/4) ÷ (1/4).'},
+ {q:`u<sub>1</sub> = 6 et u<sub>4</sub> = −48. Que vaut q ?`,a:[-2,1],h:'q<sup>3</sup> = −48 ÷ 6 = −8. Exposant impair : q a le même signe (niveau 6).'},
+ {q:`u<sub>3</sub> = 40 et u<sub>7</sub> = ${F(5,2)}. Que vaut q<sup>4</sup> ?`,a:[1,16],h:'q<sup>4</sup> = (5/2) ÷ 40 (niveau 3).'},
+ {q:`Donc q = ?`,t:'c',o:[`${F(1,2)} seulement`,`${F(1,2)} ou −${F(1,2)}`,`−${F(1,2)} seulement`],c:1,h:'Exposant pair : deux solutions (niveau 6).'},
+ {q:`t<sub>n</sub> = ${F(4,'3<sup>n</sup>')}. Calcule ${F('t<sub>n+1</sub>','t<sub>n</sub>')}.`,a:[1,3],h:'(4/3<sup>n+1</sup>) ÷ (4/3<sup>n</sup>) = 4/3<sup>n+1</sup> × 3<sup>n</sup>/4. Les 4 se simplifient, puis 3<sup>n</sup>/3<sup>n+1</sup> (niveau 5).'},
+ {q:`s<sub>n</sub> = 2<sup>n</sup> + 1 : s<sub>0</sub> = 2, s<sub>1</sub> = 3, s<sub>2</sub> = 5. Est-elle géométrique ?`,t:'c',o:['oui, de raison 2','oui, de raison 3/2','non'],c:2,h:'Calcule s<sub>1</sub>/s<sub>0</sub> = 3/2 et s<sub>2</sub>/s<sub>1</sub> = 5/3 : les quotients ne sont pas égaux.'}
+]});
+
+/* Niveau : sommes de suites arithmétiques */
+L({id:'som',title:'Sommes de suites arithmétiques',sub:'nombre de termes, 1 + 2 + … + n, premier + dernier',
+intro:()=>`<div class="card"><h2>Sommes de termes d'une suite arithmétique</h2>
+<p>Écris les termes, puis la même ligne à l'envers en dessous. Regarde les sommes de chaque colonne.</p>
+<div class="sl">u<sub>0</sub> = <input type="range" id="s0" min="-5" max="6" value="1"><b id="s0v">1</b> &nbsp; r = <input type="range" id="sr" min="-3" max="4" value="2"><b id="srv">2</b></div>
+<div class="sl">nombre de termes = <input type="range" id="sn" min="3" max="8" value="5"><b id="snv">5</b></div>
+<div style="overflow-x:auto"><table class="tv" id="st"></table></div>
+<button class="primary" id="sB">Écrire la ligne à l'envers</button>
+<p id="sx"></p>
+<div class="rule">Nombre de termes de u<sub>p</sub> à u<sub>n</sub> : <span class="m">n − p + 1</span><br>
+<span class="m">1 + 2 + … + n = ${F('n(n + 1)',2)}</span><br>
+Somme de termes consécutifs : <span class="m">S = nombre de termes × ${F('premier + dernier',2)}</span></div></div>`,
+setup(){
+  let rev=false;const s0=$('#s0'),sr=$('#sr'),sn=$('#sn');
+  s0.oninput=sr.oninput=sn.oninput=()=>{rev=false;draw()};
+  const m=x=>String(x).replace('-','−');
+  function draw(){const u0=+s0.value,r=+sr.value,N=+sn.value;$('#s0v').textContent=m(u0);$('#srv').textContent=m(r);$('#snv').textContent=N;
+    const t=[];for(let k=0;k<N;k++)t.push(u0+k*r);
+    let h=`<tr><th></th>${t.map((x,k)=>`<th>u<sub>${k}</sub></th>`).join('')}</tr><tr><th>S</th>${t.map(x=>`<td>${m(x)}</td>`).join('')}</tr>`;
+    if(rev)h+=`<tr><th>S</th>${t.slice().reverse().map(x=>`<td>${m(x)}</td>`).join('')}</tr><tr><th>2S</th>${t.map((x,k)=>`<td class="hl">${m(x+t[N-1-k])}</td>`).join('')}</tr>`;
+    $('#st').innerHTML=h;$('#sB').disabled=rev;
+    const P=t[0]+t[N-1],S=t.reduce((a,b)=>a+b,0);
+    $('#sx').innerHTML=rev?`Chaque colonne vaut premier + dernier = ${m(t[0])} + ${t[N-1]<0?'('+m(t[N-1])+')':t[N-1]} = <b>${m(P)}</b>. Il y a ${N} colonnes, donc 2S = ${N} × ${m(P)} et <span class="m">S = ${N} × ${F(m(P),2)} = ${m(S)}</span>. Vérification : ${t.map(m).join(' + ')} = ${m(S)}.`:'';}
+  $('#sB').onclick=()=>{rev=true;draw()};draw();
+},
+ex:[
+ {q:`Combien de termes de ${un(3)} à ${un(20)} ?`,a:[18,1],h:'n − p + 1 = 20 − 3 + 1.'},
+ {q:`Combien de termes de ${un(0)} à ${un(24)} ?`,a:[25,1],h:'24 − 0 + 1 : quand on commence à 0, le 0 compte aussi.'},
+ {q:`1 + 2 + … + 20 = ?`,a:[210,1],h:'n(n + 1)/2 avec n = 20 : 20 × 21 / 2.'},
+ {q:`1 + 2 + … + 100 = ?`,a:[5050,1],h:'100 × 101 / 2.'},
+ {q:`21 + 22 + … + 40 = ?`,a:[610,1],h:'(1 + … + 40) − (1 + … + 20) = 820 − 210. On enlève jusqu\'à 20, pas 21.'},
+ {head:`${un(0)} = 1, r = 2. On veut la somme des 10 premiers termes.`,q:`Le dernier terme est…`,t:'c',o:[un(9),un(10),un(11)],c:0,h:'10 termes en partant de u<sub>0</sub> : u<sub>0</sub>, u<sub>1</sub>, …, u<sub>9</sub>.'},
+ {lock:1,q:`${un(9)} = ?`,a:[19,1],h:'u<sub>9</sub> = u<sub>0</sub> + 9r = 1 + 18.'},
+ {lock:1,q:`S = ${un(0)} + ${un(1)} + … + ${un(9)} = ?`,a:[100,1],h:'S = 10 × (1 + 19)/2.'},
+ {head:`${un(1)} = 5, r = −2. On veut la somme des 20 premiers termes.`,q:`Le dernier terme est…`,t:'c',o:[un(19),un(20),un(21)],c:1,h:'On commence à u<sub>1</sub> : u<sub>1</sub>, …, u<sub>20</sub>.'},
+ {lock:1,q:`${un(20)} = ?`,a:[-33,1],h:'u<sub>20</sub> = u<sub>1</sub> + 19r = 5 + 19 × (−2). Attention : 19 pas, pas 20.'},
+ {lock:1,q:`S = ?`,a:[-280,1],h:'S = 20 × (5 + (−33))/2 = 20 × (−14).'},
+ {head:`${un(0)} = 3, r = 4, et le dernier terme vaut 99.`,q:`Quel est le rang n du dernier terme ?`,a:[24,1],h:'3 + 4n = 99, donc 4n = 96.'},
+ {lock:1,q:`Combien de termes contient la somme ?`,a:[25,1],h:'De u<sub>0</sub> à u<sub>24</sub> : 24 − 0 + 1.'},
+ {lock:1,q:`S = ?`,a:[1275,1],h:'S = 25 × (3 + 99)/2 = 25 × 51.'},
+ {head:`(v<sub>n</sub>) arithmétique de raison 3 sur ℕ*, et v<sub>1</sub> + v<sub>2</sub> + … + v<sub>8</sub> = 52.`,q:`${un(8,'v')} = ?`,t:'c',o:[`${un(1,'v')} + 21`,`${un(1,'v')} + 24`,`8${un(1,'v')}`],c:0,h:'De v<sub>1</sub> à v<sub>8</sub>, il y a 7 pas de 3.'},
+ {lock:1,q:`Calcule ${un(1,'v')}.`,a:[-4,1],h:'8 × (v<sub>1</sub> + v<sub>1</sub> + 21)/2 = 52, donc 4(2v<sub>1</sub> + 21) = 52, 2v<sub>1</sub> + 21 = 13, v<sub>1</sub> = −4.'}
+]});
+
+/* Niveau : suites auxiliaires */
+function fr_(a){return a[1]===1?String(a[0]).replace('-','−'):(a[0]<0?'−':'')+F(Math.abs(a[0]),a[1])}
+const fA=(a,b)=>red(a[0]*b[1]+b[0]*a[1],a[1]*b[1]),fM=(a,b)=>red(a[0]*b[0],a[1]*b[1]),fD=(a,b)=>red(a[0]*b[1],a[1]*b[0]);
+const U=(n,v)=>`${v||'u'}<sub>${n}</sub>`;
+L({id:'aux',title:'Suites auxiliaires',sub:'montrer que (vₙ) est arithmétique, pas à pas',
+intro:()=>`<div class="card"><h2>Suites auxiliaires arithmétiques</h2>
+<p>La suite (u<sub>n</sub>) est compliquée. On fabrique une autre suite (v<sub>n</sub>) à partir d'elle, et on espère que (v<sub>n</sub>) soit simple. Regarde avec des nombres :</p>
+<div class="tabs" id="axT"></div>
+<p class="m" id="axD" style="font-size:18px"></p>
+<div style="overflow-x:auto"><table class="tv" id="axt"></table></div>
+<button class="primary" id="axB">Calculer les v<sub>n</sub></button>
+<p id="axx"></p>
+<div class="rule"><u>La méthode en 4 étapes</u><br>
+1. On écrit v<sub>n+1</sub> en remplaçant n par n + 1 dans la définition de v<sub>n</sub>.<br>
+2. On remplace u<sub>n+1</sub> par sa formule.<br>
+3. On simplifie (fractions de fractions, on coupe une fraction en deux) jusqu'à reconnaître <span class="m">v<sub>n</sub> + r</span>.<br>
+4. On écrit v<sub>n</sub> = v<sub>0</sub> + nr, puis on retrouve u<sub>n</sub> à partir de v<sub>n</sub>.</div>
+<div class="warn">Astuce pour l'étape 3 (voir le niveau « Fractions et parenthèses ») : ${F('a + b','c')} = ${F('a','c')} + ${F('b','c')}. Par exemple ${F('1 + 2u<sub>n</sub>','u<sub>n</sub>')} = ${F(1,'u<sub>n</sub>')} + ${F('2u<sub>n</sub>','u<sub>n</sub>')} = ${F(1,'u<sub>n</sub>')} + 2.</div></div>`,
+setup(){
+  const EX=[
+   {d:`u<sub>0</sub> = 1, u<sub>n+1</sub> = ${F('u<sub>n</sub>','1 + 2u<sub>n</sub>')}, v<sub>n</sub> = ${F(1,'u<sub>n</sub>')}`,u0:[1,1],f:u=>fD(u,fA([1,1],fM([2,1],u))),v:u=>fD([1,1],u)},
+   {d:`u<sub>0</sub> = 1, u<sub>n+1</sub> = ${F('3u<sub>n</sub>','3 + u<sub>n</sub>')}, v<sub>n</sub> = ${F(3,'u<sub>n</sub>')}`,u0:[1,1],f:u=>fD(fM([3,1],u),fA([3,1],u)),v:u=>fD([3,1],u)},
+   {d:`u<sub>0</sub> = 2, u<sub>n+1</sub> = ${F('4u<sub>n</sub>','4 + 3u<sub>n</sub>')}, v<sub>n</sub> = 1 + ${F(4,'u<sub>n</sub>')}`,u0:[2,1],f:u=>fD(fM([4,1],u),fA([4,1],fM([3,1],u))),v:u=>fA([1,1],fD([4,1],u))}];
+  let k=0,shown=false;const T=$('#axT');
+  EX.forEach((x,i)=>{const b=document.createElement('button');b.textContent='Exemple '+(i+1);b.onclick=()=>{k=i;shown=false;draw()};T.appendChild(b)});
+  function draw(){T.querySelectorAll('button').forEach((b,i)=>b.classList.toggle('on',i===k));const E=EX[k];$('#axD').innerHTML=E.d;
+    const u=[E.u0];for(let n=1;n<5;n++)u.push(E.f(u[n-1]));const v=u.map(E.v);
+    let h=`<tr><th>n</th>${u.map((x,n)=>`<th>${n}</th>`).join('')}</tr><tr><th>u<sub>n</sub></th>${u.map(x=>`<td>${fr_(x)}</td>`).join('')}</tr>`;
+    if(shown){h+=`<tr><th>v<sub>n</sub></th>${v.map(x=>`<td>${fr_(x)}</td>`).join('')}</tr><tr><th>v<sub>n+1</sub> − v<sub>n</sub></th>${v.map((x,n)=>n<4?`<td class="hl">${fr_(fA(v[n+1],[-x[0],x[1]]))}</td>`:'<td></td>').join('')}</tr>`}
+    $('#axt').innerHTML=h;$('#axB').disabled=shown;
+    const r=fA(v[1],[-v[0][0],v[0][1]]);
+    $('#axx').innerHTML=shown?`Les u<sub>n</sub> n'ont pas l'air simples, mais les v<sub>n</sub> augmentent toujours de <b>${fr_(r)}</b> : (v<sub>n</sub>) a l'air arithmétique de raison ${fr_(r)}. Le calcul avec n permet de le <u>prouver</u> pour tous les n.`:'Les u<sub>n</sub> sont des fractions qui changent sans régularité visible…'}
+  $('#axB').onclick=()=>{shown=true;draw()};draw();
+},
+lockAll:1,
+ex:[
+ {head:`Exemple A : u<sub>0</sub> = 1, u<sub>n+1</sub> = ${F('u<sub>n</sub>','1 + 2u<sub>n</sub>')} et v<sub>n</sub> = ${F(1,'u<sub>n</sub>')}`,q:`Calcule ${U(1)}.`,a:[1,3],h:'u<sub>1</sub> = u<sub>0</sub>/(1 + 2u<sub>0</sub>) = 1/(1 + 2).'},
+ {q:`Calcule ${U(1,'v')}.`,a:[3,1],h:'v<sub>1</sub> = 1/u<sub>1</sub> = 1 ÷ (1/3) = 3.'},
+ {q:`${U(1,'v')} − ${U(0,'v')} = ? (on devine la raison)`,a:[2,1],h:'v<sub>0</sub> = 1/u<sub>0</sub> = 1. Donc 3 − 1.'},
+ {q:`Étape 1 : ${U('n+1','v')} = ?`,t:'c',o:[F(1,U('n+1')),`${F(1,U('n'))} + 1`,U('n+1')],c:0,h:'Dans v<sub>n</sub> = 1/u<sub>n</sub>, on remplace n par n + 1.'},
+ {q:`Étape 2 : on remplace ${U('n+1')} : ${F(1,F(U('n'),'1 + 2'+U('n')))} = ?`,t:'c',o:[F('1 + 2'+U('n'),U('n')),F(U('n'),'1 + 2'+U('n')),'1 + 2'+U('n')],c:0,h:'1 divisé par une fraction = l\'inverse de la fraction (niveau 2).'},
+ {q:`Étape 3 : ${F('1 + 2'+U('n'),U('n'))} = ?`,t:'c',o:[`${F(1,U('n'))} + 2`,`${F(1,U('n'))} + 2${U('n')}`,'1 + 2'],c:0,h:'On coupe en deux : 1/u<sub>n</sub> + 2u<sub>n</sub>/u<sub>n</sub>, et u<sub>n</sub>/u<sub>n</sub> = 1.'},
+ {q:`Donc ${U('n+1','v')} = ${U('n','v')} + ? (la raison)`,a:[2,1],h:'1/u<sub>n</sub>, c\'est v<sub>n</sub>.'},
+ {q:`Étape 4 : ${U('n','v')} = ?`,t:'c',o:['1 + 2n','2 + n','2n'],c:0,h:'v<sub>n</sub> = v<sub>0</sub> + nr avec v<sub>0</sub> = 1 et r = 2.'},
+ {q:`Et ${U('n')} = ?`,t:'c',o:[F(1,'1 + 2n'),'1 + 2n',F(1,'2n')],c:0,h:'v<sub>n</sub> = 1/u<sub>n</sub>, donc u<sub>n</sub> = 1/v<sub>n</sub>.'},
+ {head:`Exemple B : u<sub>0</sub> = 1, u<sub>n+1</sub> = ${F('3'+U('n'),'3 + '+U('n'))} et v<sub>n</sub> = ${F(3,'u<sub>n</sub>')}`,q:`Calcule ${U(1)}.`,a:[3,4],h:'3 × 1 / (3 + 1).'},
+ {q:`Calcule ${U(0,'v')}.`,a:[3,1],h:'3 / u<sub>0</sub> = 3 / 1.'},
+ {q:`Calcule ${U(1,'v')}.`,a:[4,1],h:'3 ÷ (3/4) = 3 × 4/3.'},
+ {q:`Étapes 1 et 2 : ${U('n+1','v')} = ${F(3,U('n+1'))} = 3 × ${F('3 + '+U('n'),'3'+U('n'))} = ?`,t:'c',o:[F('3 + '+U('n'),U('n')),F('3 + '+U('n'),'3'+U('n')),F(9,'3 + '+U('n'))],c:0,h:'Le 3 devant et le 3 du dénominateur se simplifient (un en haut, un en bas).'},
+ {q:`Étape 3 : ${F('3 + '+U('n'),U('n'))} = ?`,t:'c',o:[`${F(3,U('n'))} + 1`,`${F(3,U('n'))} + ${U('n')}`,'3 + 1'],c:0,h:'3/u<sub>n</sub> + u<sub>n</sub>/u<sub>n</sub>.'},
+ {q:`Donc la raison r = ?`,a:[1,1],h:'3/u<sub>n</sub> = v<sub>n</sub>, donc v<sub>n+1</sub> = v<sub>n</sub> + 1.'},
+ {q:`Étape 4 : ${U('n','v')} = ?`,t:'c',o:['3 + n','3n','1 + 3n'],c:0,h:'v<sub>0</sub> = 3 et r = 1.'},
+ {q:`Et ${U('n')} = ?`,t:'c',o:[F(3,'3 + n'),F('3 + n',3),F(3,'n')],c:0,h:'v<sub>n</sub> = 3/u<sub>n</sub>, donc u<sub>n</sub> = 3/v<sub>n</sub>.'},
+ {head:`Exemple C (comme ta fiche) : u<sub>0</sub> = 2, u<sub>n+1</sub> = ${F('4'+U('n'),'4 + 3'+U('n'))} et v<sub>n</sub> = 1 + ${F(4,'u<sub>n</sub>')}`,q:`Calcule ${U(0,'v')}.`,a:[3,1],h:'1 + 4/2.'},
+ {q:`Calcule ${U(1)}.`,a:[4,5],h:'4 × 2 / (4 + 3 × 2) = 8/10.'},
+ {q:`Calcule ${U(1,'v')}.`,a:[6,1],h:'1 + 4 ÷ (4/5) = 1 + 5.'},
+ {q:`${F(4,U('n+1'))} = 4 × ${F('4 + 3'+U('n'),'4'+U('n'))} = ?`,t:'c',o:[F('4 + 3'+U('n'),U('n')),F('16 + 3'+U('n'),'4'+U('n')),F('4 + 3'+U('n'),'4'+U('n'))],c:0,h:'Le 4 devant et le 4 du dénominateur se simplifient.'},
+ {q:`${F('4 + 3'+U('n'),U('n'))} = ${F(4,U('n'))} + ?`,a:[3,1],h:'3u<sub>n</sub>/u<sub>n</sub> = 3.'},
+ {q:`Donc ${U('n+1','v')} = 1 + ${F(4,U('n'))} + 3 = ${U('n','v')} + ?`,a:[3,1],h:'1 + 4/u<sub>n</sub>, c\'est exactement v<sub>n</sub>.'},
+ {q:`Étape 4 : ${U('n','v')} = ?`,t:'c',o:['3 + 3n','1 + 3n','3n'],c:0,h:'v<sub>0</sub> = 3 et r = 3.'},
+ {q:`Et ${U('n')} = ?`,t:'c',o:[F(4,'2 + 3n'),F(4,'3 + 3n'),F('2 + 3n',4)],c:0,h:'v<sub>n</sub> − 1 = 4/u<sub>n</sub>, donc u<sub>n</sub> = 4/(v<sub>n</sub> − 1) = 4/(2 + 3n). Vérifie avec n = 1 : 4/5.'}
+]});
+
+/* ---------- moteur ---------- */
+function cross(id,list,mode){
+  mode=mode||'prod';
+  const TOP=mode==='prod'?[0,2]:[0,3], BOT=mode==='prod'?[1,3]:[1,2];
+  const POS=['1er','2e','3e','4e'];
+  let k=0,O,N,sel=null,log=[];const T=$('#'+id+'T');
+  list.forEach((x,i)=>{const b=document.createElement('button');b.innerHTML=mode==='prod'?`${x[0]}/${x[1]} × ${x[2]}/${x[3]}`:`(${x[0]}/${x[1]}) / (${x[2]}/${x[3]})`;b.onclick=()=>{k=i;reset()};T.appendChild(b)});
+  function reset(){O=[...list[k]];N=[...O];sel=null;log=[];msg(mode==='prod'?'Clique sur un nombre en haut, puis sur un nombre en bas.':'Clique sur deux nombres que tu veux simplifier ensemble.');draw()}
+  function msg(t){$('#'+id+'m').innerHTML=t}
+  function tl(i){const ch=N[i]!==O[i];return `<span class="tl ${N[i]===1&&ch?'one':''} ${sel===i?'sel':''}" data-i="${i}">${mode==='dbl'?`<span class="pos">${POS[i]}</span>`:''}${ch?`<s>${O[i]}</s><span class="rest">${N[i]}</span>`:O[i]}</span>`}
+  const small=(a,b)=>`<span class="tiles"><span class="tr">${tl(a)}</span><span class="ln"></span><span class="tr">${tl(b)}</span></span>`;
+  function canMore(){return TOP.some(a=>BOT.some(b=>gcd(N[a],N[b])>1))}
+  function draw(){T.querySelectorAll('button').forEach((b,i)=>b.classList.toggle('on',i===k));
+    const expr=mode==='prod'?`${small(0,1)} × ${small(2,3)}`:`<span class="tiles">${small(0,1)}<span class="bigln"></span>${small(2,3)}</span>`;
+    const tn=TOP.map(i=>N[i]),bn=BOT.map(i=>N[i]),P=tn[0]*tn[1],Q=bn[0]*bn[1];
+    const side=`= ${F(tn.join(' × '),bn.join(' × '))} = ${fv(P,Q)}`;
+    $('#'+id).innerHTML=`<div class="cw"><div class="m big">${expr}</div><div class="side">${side}</div></div>`+(log.length?`<ol class="log">${log.map(x=>'<li>'+x+'</li>').join('')}</ol>`:'');
+    $('#'+id).querySelectorAll('.tl').forEach(t=>t.onclick=()=>click(+t.dataset.i));
+    if(!canMore()&&log.length)msg(`Plus rien à simplifier : il reste ${F(tn.join(' × '),bn.join(' × '))} = ${fv(P,Q)}. On a multiplié de petits nombres, c'est déjà simplifié.`);
+    else if(!canMore())msg(`Ici, aucun nombre du haut n'a de diviseur commun avec un nombre du bas : rien ne se simplifie. On multiplie directement : ${F(tn.join(' × '),bn.join(' × '))} = ${fv(P,Q)}.`)}
+  function click(i){
+    if(sel===null||sel===i){sel=sel===i?null:i;draw();return}
+    const a=sel,b=i;sel=null;
+    const sameSide=(TOP.includes(a)&&TOP.includes(b))||(BOT.includes(a)&&BOT.includes(b));
+    if(sameSide){msg(mode==='dbl'?`Le ${POS[a]} et le ${POS[b]} finissent tous les deux ${TOP.includes(a)?'en haut':'en bas'} : on ne peut pas les simplifier ensemble. Il faut un nombre qui finit en haut et un qui finit en bas.`:'Ces deux nombres sont du même côté : il faut un nombre du haut et un nombre du bas.');draw();return}
+    const g=gcd(N[a],N[b]);
+    if(g>1){log.push(`${N[a]} et ${N[b]} : on divise les deux par ${g} → il reste ${N[a]/g} et ${N[b]/g}.`);msg('On barre les deux nombres et on écrit à côté ce qu\'il reste.');N[a]/=g;N[b]/=g;draw();
+      [a,b].forEach(j=>{const t=$('#'+id).querySelector(`[data-i="${j}"]`);t.classList.add('pop');setTimeout(()=>t.classList.remove('pop'),300)})}
+    else{msg(`${N[a]} et ${N[b]} n'ont pas de diviseur commun (autre que 1). Essaie une autre paire.`);draw()}
+  }
+  $('#'+id+'R').onclick=reset;reset();
+}
+
+let cur=0;
+function go(i){cur=i;window.scrollTo(0,0);if(i===0)home();else if(i>LV.length)bilan();else level(i)}
+function home(){
+  const[n,t]=totalPts();
+  let h=`<div class="card"><h2>Fractions et puissances</h2><p class="lead">Onze niveaux, du plus facile au plus difficile. Chaque niveau commence par une explication à manipuler, puis des exercices. Si tu bloques, demande un indice : il n'y a pas de pénalité.</p>
+  <div class="bar"><div style="width:${t?n/t*100:0}%"></div></div><span class="small">${n} exercices réussis sur ${t}</span></div><div class="home">`;
+  LV.forEach((l,i)=>{const r=st[l.id]||{},ok=l.ex.filter((e,j)=>r[j]&&r[j].ok).length,all=ok===l.ex.length;
+    h+=`<button class="lvl ${all?'done':''}" onclick="go(${i+1})"><span class="n">${i+1}</span><span><span class="t">${l.title}</span><span class="s">${l.sub}</span></span><span class="st">${ok?ok+' / '+l.ex.length:''}</span></button>`});
+  h+=`<button class="lvl" onclick="go(${LV.length+1})"><span class="n">✓</span><span><span class="t">Mon bilan</span><span class="s">à envoyer à ma mentore</span></span></button></div>`;
+  $('#main').innerHTML=h;updPts();
+}
+function level(i){
+  const l=LV[i-1];const r=rec(l.id);
+  let h=l.intro()+`<div class="card"><h3>À toi de jouer</h3><p class="small">Écris une fraction avec / (par exemple 3/4 ou -2/3), un entier simplement (par exemple 6 ou -2). Donne le résultat simplifié.</p><div id="exs"></div></div>`;
+  h+=`<div class="nav"><button onclick="go(${i-1})">← ${i>1?'Niveau précédent':'Menu'}</button><button class="primary" onclick="go(${i+1})">${i<LV.length?'Niveau suivant →':'Mon bilan →'}</button></div>`;
+  $('#main').innerHTML=h;l.setup();
+  const box=$('#exs');
+  l.ex.forEach((e,j)=>{const d=document.createElement('div');d.className='ex'+(r[j]&&r[j].ok?' ok':'');
+    const lab=e.lab?`<span class="small">${e.lab} :</span>`:'';
+    d.innerHTML=(e.head?`<div class="gh">${e.head}</div>`:'')+`<div class="q"><span class="num">${j+1}</span><span class="m">${e.q}${e.t!=='c'&&isExpr(e)?' =':''}</span>${e.t==='c'?'':`${lab}<input inputmode="text" autocomplete="off" aria-label="réponse ${j+1}">`}</div>
+    ${e.t==='c'?`<div class="opts">${e.o.map((o,k)=>`<button data-k="${k}">${o}</button>`).join('')}</div>`:`<div class="row"><button class="primary" data-a="v">Vérifier</button><button data-a="h">Indice</button></div>`}
+    <div class="fb"></div><div class="sol"></div>`;
+    if(e.head)d.style.marginTop='22px';
+    if(j>0&&!e.head&&!(r[j]&&r[j].ok)&&!(r[j-1]&&r[j-1].ok)&&(e.lock||l.lockAll)){d.dataset.lock=1;d.style.display='none'}
+    else if(j>0&&!e.head&&(e.lock||l.lockAll))d.dataset.lock=1;
+    box.appendChild(d);wire(d,e,j,l)});
+  updPts();
+}
+function isExpr(e){const t=plain(e.q);return !t.includes('=')&&!/[.?]$/.test(t)}
+function answerHTML(e){return e.t==='c'?e.o[e.c]:fv(e.a[0],e.a[1])}
+function wire(d,e,j,l){
+  const r=rec(l.id);const fb=d.querySelector('.fb'),sol=d.querySelector('.sol');
+  const say=(cls,t)=>{fb.className='fb show '+cls;fb.innerHTML=t};
+  const win=()=>{d.classList.add('ok');const nx=d.nextElementSibling;if(nx&&nx.dataset.lock&&nx.style.display==='none'){nx.style.display='';nx.style.animation='none'}const first=!r[j]||!r[j].tries;r[j]=Object.assign(r[j]||{},{ok:true});save();updPts();cheer(first?null:'Bien joué, tu as trouvé !');
+    say('ok',`<b>${first?'Exact !':'Oui, c\'est ça !'}</b> ${e.t!=='c'&&isExpr(e)?'<span class="m">'+e.q+' = '+answerHTML(e)+'</span>':(e.t==='c'?'':'Réponse : <span class="m">'+answerHTML(e)+'</span>')}`)};
+  const miss=(msg)=>{r[j]=r[j]||{};r[j].tries=(r[j].tries||0)+1;save();
+    say('ko',msg+(r[j].tries>=2?' <button class="lk" style="margin-left:6px;padding:3px 10px;font-size:14px">Voir la correction</button>':''));
+    const lk=fb.querySelector('.lk');if(lk)lk.onclick=()=>{sol.classList.add('show');sol.innerHTML=`${e.h}<br>Réponse : <span class="m">${answerHTML(e)}</span>`;r[j].seen=1;save()}};
+  if(e.t==='c'){
+    d.querySelectorAll('.opts button').forEach(b=>b.onclick=()=>{const k=+b.dataset.k;
+      if(k===e.c){b.classList.add('okb');d.querySelectorAll('.opts button').forEach(x=>x.disabled=true);win()}
+      else{b.classList.add('ko');miss('Pas tout à fait. '+e.h)}});
+    return;
+  }
+  const inp=d.querySelector('input');
+  const check=()=>{const p=parse(inp.value);
+    if(!p){say('hint','Je ne comprends pas cette réponse. Écris par exemple 3/4, -2/3 ou 5.');return}
+    const[n,dd]=red(p.n,p.d);
+    if(n===e.a[0]&&dd===e.a[1]){
+      if(gcd(p.n,p.d)>1){say('hint',`<b>Juste !</b> Mais ta fraction peut encore se simplifier : divise le haut et le bas par ${gcd(p.n,p.d)}.`);return}
+      inp.disabled=true;d.querySelectorAll('.row button').forEach(x=>x.disabled=true);win();return}
+    if(n===-e.a[0]&&dd===e.a[1]&&n!==0){miss('Presque : c\'est le <u>signe</u> qui ne va pas. Vérifie la règle des signes.');return}
+    if(e.a[1]!==1&&n===e.a[1]&&dd===e.a[0]){miss('Tu as trouvé l\'inverse de la réponse : le haut et le bas sont échangés.');return}
+    miss('Pas encore. Clique sur Indice si tu veux de l\'aide.')};
+  d.querySelector('[data-a="v"]').onclick=check;
+  inp.addEventListener('keydown',ev=>{if(ev.key==='Enter')check()});
+  d.querySelector('[data-a="h"]').onclick=()=>{say('hint',e.h);r[j]=r[j]||{};r[j].hint=1;save()};
+}
+function plain(html){const d=document.createElement('div');d.innerHTML=html;
+  const w=n=>{if(n.nodeType===3)return n.textContent;if(n.classList&&n.classList.contains('fr')){const c=n.children;const a=w(c[0]),b=w(c[1]);const p=x=>/^[−-]?\w+$/.test(x.trim())?x.trim():'('+x.trim()+')';return p(a)+'/'+p(b)}
+    const t=[...n.childNodes].map(w).join('');if(n.tagName==='SUP')return '^'+(t.length>1?'('+t+')':t);return t};
+  return w(d).replace(/\s+/g,' ').trim()}
+function report(){
+  let t='Bilan · Fractions et puissances\n\n';const[n,T]=totalPts();t+=`Exercices réussis : ${n} / ${T}\n\n`;
+  LV.forEach((l,i)=>{const r=st[l.id]||{};const ok=l.ex.filter((e,j)=>r[j]&&r[j].ok).length;
+    const first=l.ex.filter((e,j)=>r[j]&&r[j].ok&&!r[j].tries&&!r[j].hint).length;
+    t+=`Niveau ${i+1} · ${l.title} : ${ok} / ${l.ex.length} réussis, dont ${first} du premier coup sans indice\n`;
+    l.ex.forEach((e,j)=>{const x=r[j];if(!x)return;const q=plain(e.q);
+      if(x.tries||x.hint||!x.ok)t+=`   - ex. ${j+1} : ${q.replace(/\s+/g,' ').trim()} → ${x.ok?'réussi':'pas encore réussi'}${x.tries?', '+x.tries+' erreur(s)':''}${x.hint?', indice utilisé':''}${x.seen?', correction vue':''}\n`});
+  });
+  return t;
+}
+function bilan(){
+  const t=report();
+  $('#main').innerHTML=`<div class="card"><h2>Mon bilan</h2><p class="lead">Envoie ce bilan à ta mentore : elle verra ce qui est acquis et ce qu'on reprend ensemble.</p>
+  <textarea id="rep" readonly>${t.replace(/</g,'&lt;')}</textarea>
+  <div class="row" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px"><a id="mail" class="primary" style="text-decoration:none"><button class="primary">Envoyer par e-mail</button></a><button id="cp">Copier le texte</button><button id="rs">Tout recommencer</button></div>
+  <p class="small" id="cpm"></p></div><div class="nav"><button onclick="go(0)">← Menu</button><span></span></div>`;
+  $('#mail').href='mailto:amina.mentoring@protonmail.com?subject='+encodeURIComponent('Bilan fractions et puissances')+'&body='+encodeURIComponent(t);
+  $('#cp').onclick=()=>{const ta=$('#rep');ta.select();let ok=false;try{ok=document.execCommand('copy')}catch(e){}
+    if(navigator.clipboard)navigator.clipboard.writeText(t).then(()=>$('#cpm').textContent='Copié !').catch(()=>{$('#cpm').textContent=ok?'Copié !':'Sélectionne le texte et copie-le.'});else $('#cpm').textContent=ok?'Copié !':'Sélectionne le texte et copie-le.'};
+  $('#rs').onclick=()=>{if(confirmReset()){st={};save();go(0)}};
+}
+let resetArm=false;function confirmReset(){if(resetArm)return true;resetArm=true;$('#cpm').textContent='Clique encore une fois sur « Tout recommencer » pour effacer tes réponses.';setTimeout(()=>resetArm=false,4000);return false}
+go(0);
+</script>
+</body>
+</html>
